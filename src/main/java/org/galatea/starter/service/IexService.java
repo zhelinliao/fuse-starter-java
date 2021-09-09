@@ -1,5 +1,7 @@
 package org.galatea.starter.service;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import lombok.NonNull;
@@ -8,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.galatea.starter.domain.IexLastTradedPrice;
 import org.galatea.starter.domain.IexSymbol;
 import org.galatea.starter.domain.IexHistoricalPrice;
+import org.galatea.starter.domain.rpsy.IHistoricalPriceRpsy;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -23,6 +26,8 @@ public class IexService {
   private IexClient iexClient;
   @NonNull
   private IexClientExtension iexClientExtension;
+  @NonNull
+  private IHistoricalPriceRpsy historicalPriceRpsy;
 
 
   /**
@@ -52,7 +57,35 @@ public class IexService {
    *
    */
   public List<IexHistoricalPrice> getHistoricalPricesForSymbols(final String symbol, final String range, final String token) {
-    return iexClientExtension.getHistoricalPricesForSymbols(symbol, range, token);
+
+    List<IexHistoricalPrice> historicalPrice = new ArrayList<>();
+    LocalDate today = LocalDate.now();
+    //default range = 1m
+    if(range.equals("")) checkStartingdDate(today, "1m");
+    else
+      checkStartingdDate(today, range)
+    //get it from cache first
+    historicalPrice = getHistoricalPricesForSymbolsCache();
+    if (!historicalPrice.isEmpty()) {
+      log.info("");
+    } else {   // if the data is not complete, then get it from IEX
+      historicalPrice = getHistoricalPricesForSymbolsIEX();
+      log.info("");
+    }
+    return historicalPrice;
   }
 
+  public List<IexHistoricalPrice> getHistoricalPricesForSymbolsCache(final String symbol, final String range, final String token) {
+    List<IexHistoricalPrice> historicalPrice = new ArrayList<>();
+    historicalPriceRpsy.findBySymbol();
+    //check the date
+    return historicalPrice;
+  }
+  public List<IexHistoricalPrice> getHistoricalPricesForSymbolsIEX(final String symbol, final String range, final String token) {
+    List<IexHistoricalPrice> historicalPrice = new ArrayList<>();
+    historicalPrice = iexClientExtension.getHistoricalPricesForSymbols(symbol, range, token);
+    // save to rpsy
+    return historicalPrice;
+  }
+  public checkStartingdDate(String today, String range)
 }
