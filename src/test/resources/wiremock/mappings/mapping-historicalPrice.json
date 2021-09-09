@@ -1,0 +1,33 @@
+{
+  "id" : "16369e06-78d4-40a7-98d1-3dbe0ba82fc9",
+  "name" : "tops_last",
+  "request" : {
+    "url" : "/stock/A/chart/max?token=qwe",
+    "method" : "GET"
+  },
+  "response" : {
+    "status" : 200,
+    "jsonBody" : [{"close":146.09,"high":146.7,"low":145.52,"open":146.2,"symbol":"A","volume":48908689,"id":"HISTORICAL_PRICES","key":"AAPL","subkey":"","date":"2021-08-09","updated":1628557202000,"changeOverTime":0,"marketChangeOverTime":0,"uOpen":146.2,"uClose":146.09,"uHigh":146.7,"uLow":145.52,"uVolume":48908689,"fOpen":146.2,"fClose":146.09,"fHigh":146.7,"fLow":145.52,"fVolume":48908689,"label":"Aug 9, 21","change":0,"changePercent":0},{"close":145.6,"high":147.71,"low":145.3,"open":146.44,"symbol":"A","volume":69023081,"id":"HISTORICAL_PRICES","key":"AAPL","subkey":"","date":"2021-08-10","updated":1628648173000,"changeOverTime":-0.003354096789650278,"marketChangeOverTime":-0.003354096789650278,"uOpen":146.44,"uClose":145.6,"uHigh":147.71,"uLow":145.3,"uVolume":69023081,"fOpen":146.44,"fClose":145.6,"fHigh":147.71,"fLow":145.3,"fVolume":69023081,"label":"Aug 10, 21","change":-0.4900000000000091,"changePercent":-0.0034},{"close":145.86,"high":146.72,"low":145.53,"open":146.05,"symbol":"A","volume":48493463,"id":"HISTORICAL_PRICES","key":"AAPL","subkey":"","date":"2021-08-11","updated":1628730130000,"changeOverTime":-0.0015743719624888067,"marketChangeOverTime":-0.0015743719624888067,"uOpen":146.05,"uClose":145.86,"uHigh":146.72,"uLow":145.53,"uVolume":48493463,"fOpen":146.05,"fClose":145.86,"fHigh":146.72,"fLow":145.53,"fVolume":48493463,"label":"Aug 11, 21","change":0.2600000000000193,"changePercent":0.0018},{"close":148.89,"high":149.05,"low":145.84,"open":146.19,"symbol":"A","volume":73779113,"id":"HISTORICAL_PRICES","key":"AAPL","subkey":"","date":"2021-08-12","updated":1628816415000,"changeOverTime":0.019166267369429685,"marketChangeOverTime":0.019166267369429685,"uOpen":146.19,"uClose":148.89,"uHigh":149.05,"uLow":145.84,"uVolume":73779113,"fOpen":146.19,"fClose":148.89,"fHigh":149.05,"fLow":145.84,"fVolume":73779113,"label":"Aug 12, 21","change":3.0299999999999727,"changePercent":0.0208},{"close":149.1,"high":149.4444,"low":148.27,"open":148.97,"symbol":"A","volume":59375009,"id":"HISTORICAL_PRICES","key":"AAPL","subkey":"","date":"2021-08-13","updated":1629068395000,"changeOverTime":0.020603737422136975,"marketChangeOverTime":0.020603737422136975,"uOpen":148.97,"uClose":149.1,"uHigh":149.4444,"uLow":148.27,"uVolume":59375009,"fOpen":148.97,"fClose":149.1,"fHigh":149.4444,"fLow":148.27,"fVolume":59375009,"label":"Aug 13, 21","change":0.21000000000000796,"changePercent":0.0014},{"close":151.12,"high":151.19,"low":146.47,"open":148.535,"symbol":"A","volume":103558782,"id":"HISTORICAL_PRICES","key":"AAPL","subkey":"","date":"2021-08-16","updated":1629162102000,"changeOverTime":0.03443083031008283,"marketChangeOverTime":0.03443083031008283,"uOpen":148.535,"uClose":151.12,"uHigh":151.19,"uLow":146.47,"uVolume":103558782,"fOpen":148.535,"fClose":151.12,"fHigh":151.19,"fLow":146.47,"fVolume":103558782,"label":"Aug 16, 21","change":2.0200000000000102,"changePercent":0.0135}],
+    "headers" : {
+      "Server" : "nginx",
+      "Date" : "Thu, 08 Aug 2019 14:08:53 GMT",
+      "Content-Type" : "application/json; charset=utf-8",
+      "Connection" : "keep-alive",
+      "set-cookie" : "ctoken=958c0e17a3f542a2a13ef676b670326d; Domain=.iextrading.com; Path=/; Expires=Fri, 09 Aug 2019 02:08:53 GMT; Secure",
+      "Content-Security-Policy" : "default-src 'self'; child-src 'none'; object-src 'none'; style-src 'self' 'unsafe-inline'; font-src data:; frame-src 'self'; connect-src 'self' https://auth.iextrading.com https://api.iextrading.com https://api.iextrading.com wss://iextrading.com wss://tops.iextrading.com wss://api.iextrading.com wss://iextrading.com https://iextrading.com/member-center; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.google-analytics.com/analytics.js;",
+      "X-Content-Security-Policy" : "default-src 'self'; child-src 'none'; object-src 'none'; style-src 'self' 'unsafe-inline'; font-src data:; frame-src 'self'; connect-src 'self' https://auth.iextrading.com https://api.iextrading.com https://api.iextrading.com wss://iextrading.com wss://tops.iextrading.com wss://api.iextrading.com wss://iextrading.com https://iextrading.com/member-center; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.google-analytics.com/analytics.js;",
+      "Frame-Options" : "SAMEORIGIN",
+      "X-Frame-Options" : "SAMEORIGIN",
+      "X-Content-Type-Options" : "nosniff",
+      "Strict-Transport-Security" : "max-age=15768000",
+      "Access-Control-Allow-Origin" : "*",
+      "Access-Control-Allow-Credentials" : "true",
+      "Access-Control-Allow-Methods" : "GET, OPTIONS",
+      "Access-Control-Allow-Headers" : "Origin, X-Requested-With, Content-Type, Accept"
+    }
+  },
+  "uuid" : "16369e06-78d4-40a7-98d1-3dbe0ba82fc9",
+  "persistent" : true,
+  "insertionIndex" : 5
+}
+

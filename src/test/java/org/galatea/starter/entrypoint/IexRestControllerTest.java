@@ -60,13 +60,13 @@ public class IexRestControllerTest extends ASpringTest {
 
     MvcResult result = this.mvc.perform(
         org.springframework.test.web.servlet.request.MockMvcRequestBuilders
-            .get("/iex/lastTradedPrice?symbols=AAPL")
+            .get("/iex/lastTradedPrice?symbols=FB")
             // This URL will be hit by the MockMvc client. The result is configured in the file
             // src/test/resources/wiremock/mappings/mapping-lastTradedPrice.json
             .accept(MediaType.APPLICATION_JSON_VALUE))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$[0].symbol", is("FB")))
-        .andExpect(jsonPath("$[0].price").value(new BigDecimal("186.34")))
+        .andExpect(jsonPath("$[0].price").value(new BigDecimal("186.3011")))
         .andReturn();
   }
 
@@ -81,4 +81,20 @@ public class IexRestControllerTest extends ASpringTest {
         .andExpect(jsonPath("$", is(Collections.emptyList())))
         .andReturn();
   }
+
+  @Test
+  public void testGetHistoricalPrice() throws Exception {
+
+    MvcResult result = this.mvc.perform(
+            org.springframework.test.web.servlet.request.MockMvcRequestBuilders
+                .get("/iex/historicalPrices?symbol=A&range=max&token=qwe")
+                .accept(MediaType.APPLICATION_JSON_VALUE))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$[0].symbol", is("A")))
+        .andExpect(jsonPath("$[0].high").value(new BigDecimal("146.7")))
+        .andExpect(jsonPath("$[0].length()", is(7)))
+        .andExpect(jsonPath("$.length()", is(6)))
+        .andReturn();
+  }
 }
+

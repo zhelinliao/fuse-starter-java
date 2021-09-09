@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.galatea.starter.domain.IexLastTradedPrice;
 import org.galatea.starter.domain.IexSymbol;
+import org.galatea.starter.domain.IexHistoricalPrice;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -20,6 +21,8 @@ public class IexService {
 
   @NonNull
   private IexClient iexClient;
+  @NonNull
+  private IexClientExtension iexClientExtension;
 
 
   /**
@@ -45,5 +48,11 @@ public class IexService {
     }
   }
 
+  /**
+   *
+   */
+  public List<IexHistoricalPrice> getHistoricalPricesForSymbols(final String symbol, final String range, final String token) {
+    return iexClientExtension.getHistoricalPricesForSymbols(symbol, range, token);
+  }
 
 }
