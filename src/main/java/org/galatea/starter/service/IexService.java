@@ -68,6 +68,7 @@ public class IexService {
   /**
    *
    */
+
   public List<IexHistoricalPrice> getHistoricalPricesForSymbol(final String symbol, final String range, final String token) {
 
     List<IexHistoricalPrice> historicalPrice = new ArrayList<>();
@@ -85,6 +86,20 @@ public class IexService {
       log.info("");
     }
     return historicalPrice;
+
+  public List<IexHistoricalPrice> getHistoricalPricesForSymbol(final String symbol, final String range, final String date, final String token) {
+    if(symbol.equals("") || token.equals(""))
+      return Collections.emptyList();
+    else if(range == null || range.equals(""))
+      return iexClientExtension.getHistoricalPricesForSymbolDefault(symbol, token);
+    else if(!range.equals("date"))
+      return iexClientExtension.getHistoricalPricesForSymbol(symbol, range, token);
+    else
+      if(date == null || date.equals(""))
+        return Collections.emptyList();
+      else
+        return iexClientExtension.getHistoricalPricesForSymbolByDate(symbol, range, date, token);
+
   }
 
   public List<IexHistoricalPrice> getHistoricalPricesForSymbolsCache(final String symbol, final String range, final String token) {
