@@ -22,9 +22,21 @@ public interface IexClientExtension {
    * @return a list of the historical price for the symbols passed in during the chosen time range.
    */
   @GetMapping("/stock/{symbol}/chart/{range}")
-  List<IexHistoricalPrice> getHistoricalPricesForSymbols(
+  List<IexHistoricalPrice> getHistoricalPricesForSymbol(
       @PathVariable(value = "symbol") String symbol,
       @PathVariable(value = "range", required = false) String range,
+      @RequestParam(value = "token") String token);
+
+  @GetMapping("/stock/{symbol}/chart")
+  List<IexHistoricalPrice> getHistoricalPricesForSymbolDefault(
+      @PathVariable(value = "symbol") String symbol,
+      @RequestParam(value = "token") String token);
+
+  @GetMapping("/stock/{symbol}/chart/{range}/{date}")
+  List<IexHistoricalPrice> getHistoricalPricesForSymbolByDate(
+      @PathVariable(value = "symbol") String symbol,
+      @PathVariable(value = "range", required = false) String range,
+      @PathVariable(value = "date", required = false) String date,
       @RequestParam(value = "token") String token);
 }
 
