@@ -1,7 +1,6 @@
 package org.galatea.starter.domain;
 
 import java.math.BigDecimal;
-import java.util.Date;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -20,13 +19,13 @@ public class IexHistoricalPrice {
   private BigDecimal open;
   private String symbol;
   private Integer volume;
-  private Date date;
+  private String date;
 
   protected IexHistoricalPrice() {
   }
 
   public IexHistoricalPrice(BigDecimal close, BigDecimal high, BigDecimal low,
-      BigDecimal open, String symbol, Integer volume, Date date) {
+      BigDecimal open, String symbol, Integer volume, String date) {
     this.close = close;
     this.high = high;
     this.low = low;
@@ -64,7 +63,7 @@ public class IexHistoricalPrice {
     return volume;
   }
 
-  public Date getDate() {
+  public String getDate() {
     return date;
   }
 

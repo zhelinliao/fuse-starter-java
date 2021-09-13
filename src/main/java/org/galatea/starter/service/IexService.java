@@ -52,11 +52,23 @@ public class IexService {
       return iexClient.getLastTradedPriceForSymbols(symbols.toArray(new String[0]));
     }
   }
-
+  public List<IexHistoricalPrice> getHistoricalPricesForSymbol(final String symbol, final String range, final String date, final String token) {
+    if(symbol.equals("") || token.equals(""))
+      return Collections.emptyList();
+    else if(range == null || range.equals(""))
+      return iexClientExtension.getHistoricalPricesForSymbolDefault(symbol, token);
+    else if(!range.equals("date"))
+      return iexClientExtension.getHistoricalPricesForSymbol(symbol, range, token);
+    else
+    if(date == null || date.equals(""))
+      return Collections.emptyList();
+    else
+      return iexClientExtension.getHistoricalPricesForSymbolByDate(symbol, range, date, token);
+  }
   /**
    *
    */
-  public List<IexHistoricalPrice> getHistoricalPricesForSymbols(final String symbol, final String range, final String token) {
+  public List<IexHistoricalPrice> getHistoricalPricesForSymbol(final String symbol, final String range, final String token) {
 
     List<IexHistoricalPrice> historicalPrice = new ArrayList<>();
     LocalDate today = LocalDate.now();
