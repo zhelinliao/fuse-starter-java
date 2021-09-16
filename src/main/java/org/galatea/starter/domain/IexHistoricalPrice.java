@@ -1,25 +1,27 @@
 package org.galatea.starter.domain;
 
 import java.math.BigDecimal;
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.IdClass;
 import lombok.Builder;
 import lombok.Data;
 
 @Data
-@Builder
+@Entity
+@IdClass(IexPriceID.class)
 public class IexHistoricalPrice {
   @Id
-  @GeneratedValue(strategy= GenerationType.AUTO)
-  private long id;
+  private String symbol;
+  @Id
+  private String date;
   private BigDecimal close;
   private BigDecimal high;
   private BigDecimal low;
   private BigDecimal open;
-  private String symbol;
   private Integer volume;
-  private String date;
 
   protected IexHistoricalPrice() {
   }
@@ -35,49 +37,4 @@ public class IexHistoricalPrice {
     this.date = date;
   }
 
-  public long getId() {
-    return id;
-  }
-
-  public BigDecimal getClose() {
-    return close;
-  }
-
-  public BigDecimal getHigh() {
-    return high;
-  }
-
-  public BigDecimal getLow() {
-    return low;
-  }
-
-  public BigDecimal getOpen() {
-    return open;
-  }
-
-  public String getSymbol() {
-    return symbol;
-  }
-
-  public Integer getVolume() {
-    return volume;
-  }
-
-  public String getDate() {
-    return date;
-  }
-
-  @Override
-  public String toString() {
-    return "IexHistoricalPrice{" +
-        "id=" + id +
-        ", close=" + close +
-        ", high=" + high +
-        ", low=" + low +
-        ", open=" + open +
-        ", symbol='" + symbol + '\'' +
-        ", volume=" + volume +
-        ", date=" + date +
-        '}';
-  }
 }
