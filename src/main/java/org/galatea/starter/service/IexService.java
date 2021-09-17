@@ -4,8 +4,10 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.NonNull;
@@ -78,8 +80,26 @@ public class IexService {
   private List<IexHistoricalPrice> getHistoricalPricesForSymbolByDate(final String symbol, final String range, final String date, final String token){
     if (date == null || date.equals(""))
       return Collections.emptyList();
-    else
-      return iexClientExtension.getHistoricalPricesForSymbolByDate(symbol, range, date, token);
+    else {
+      List<IexHistoricalPrice> prices = null;
+      try {
+        LocalDate localDate = LocalDate.of(Integer.parseInt(date.substring(0, 4)),
+            Integer.parseInt(date.substring(4, 6)), Integer.parseInt(date.substring(6, 8)));
+        log.info("Logging: Query by date, parse date: " + localDate);
+        prices = getHistoricalPricesForSymbolCache(symbol, new ArrayList<>(Arrays.asList(localDate)));
+      }
+      catch (Exception e) {
+        log.info(e.toString());
+      }
+      if (prices != null && !prices.isEmpty())
+        return prices;
+      else {
+        List<IexHistoricalPrice> historicalPrice = iexClientExtension.getHistoricalPricesForSymbolByDate(symbol, range, date, token);
+        for (IexHistoricalPrice iexPrice:historicalPrice)
+          historicalPriceRpsy.save(iexPrice);
+        return historicalPrice;
+      }
+    }
   }
 
   private List<IexHistoricalPrice> getHistoricalPricesForSymbolByRange(final String symbol, final String range, final String token) {
@@ -87,7 +107,7 @@ public class IexService {
     LocalDate currentDate = LocalDate.now();
     LocalDate startingDate = null;
     List<LocalDate> dates = null;
-    List<IexHistoricalPrice> prices;
+    List<IexHistoricalPrice> prices = null;
 
     if (range == null || range.equals(""))
       startingDate = checkStartingDate(currentDate, RANGE_DEFAULT);
@@ -96,20 +116,14 @@ public class IexService {
 
     if (startingDate == null)
       throw new IllegalArgumentException("Invalid range over date: Null pointer for date.");
-    log.info("Today = " + currentDate.toString() + " startingDate = " + startingDate.toString());
+    log.info("Logging: Today = " + currentDate.toString() + " startingDate = " + startingDate.toString());
     dates = startingDate.datesUntil(currentDate, Period.ofDays(1)).collect(Collectors.toList());
     prices = getHistoricalPricesForSymbolCache(symbol, dates);
+    log.info("Logging: Size of the list retrieve from cache is " + prices.size());
     if (!prices.isEmpty())
       return prices;
     else
-     // return getHistoricalPricesForSymbolIEX();
-      return null;
-/*
-    if (range == null || range.equals(""))
-      return iexClientExtension.getHistoricalPricesForSymbolDefault(symbol, token);
-    else
-      return iexClientExtension.getHistoricalPricesForSymbol(symbol, range, token);
-*/
+      return getHistoricalPricesForSymbolIEX(symbol, range, token);
   }
 
   private LocalDate checkStartingDate(LocalDate today, String range){
@@ -149,26 +163,39 @@ public class IexService {
 
   public List<IexHistoricalPrice> getHistoricalPricesForSymbolCache(final String symbol, final List<LocalDate> dates) {
     List<IexHistoricalPrice> historicalPrice = new ArrayList<>();
-    //log.info(historicalPriceRpsy.findAll().toString());
+    log.info("Logging: All data from cache "+ historicalPriceRpsy.findAll().toString());
     for (LocalDate date:dates) {
       if (date.getDayOfWeek() == DayOfWeek.SATURDAY || date.getDayOfWeek() == DayOfWeek.SUNDAY)
         continue;
-      IexPriceID iexPriceID = new IexPriceID(symbol, date.toString());
-      log.info("check id: "+ iexPriceID.toString());
+      IexPriceID iexPriceID = new IexPriceID(symbol.toUpperCase(), date.toString());
+
       Optional<IexHistoricalPrice> price = historicalPriceRpsy.findById(iexPriceID);
-      if (price.isPresent())
+      log.info("Logging: Search " + symbol + " " + date + " === Result: " + price);
+      if (price.isPresent()) {
         historicalPrice.add(price.get());
-      else
+        log.info("Logging: add to cache " + symbol + " " + date);
+      }
+      else {
+        log.info("Logging: can't find data for date " + date);
         return Collections.emptyList();
+      }
     }
+    log.info("Logging: Size of the list returning from cache is " + historicalPrice.size());
     return historicalPrice;
   }
-  /*
+
   public List<IexHistoricalPrice> getHistoricalPricesForSymbolIEX(final String symbol, final String range, final String token) {
-    List<IexHistoricalPrice> historicalPrice = new ArrayList<>();
-    historicalPrice = iexClientExtension.getHistoricalPricesForSymbols(symbol, range, token);
-    // save to rpsy
+    log.info("Logging: Request IEX prices.");
+    List<IexHistoricalPrice> historicalPrice;
+    if (range == null || range.equals(""))
+      historicalPrice = iexClientExtension.getHistoricalPricesForSymbolDefault(symbol, token);
+    else
+      historicalPrice = iexClientExtension.getHistoricalPricesForSymbol(symbol, range, token);
+
+    // save to repository
+    for (IexHistoricalPrice iexPrice:historicalPrice)
+      historicalPriceRpsy.save(iexPrice);
     return historicalPrice;
   }
-*/
+
 }

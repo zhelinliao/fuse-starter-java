@@ -10,7 +10,7 @@ public class IexPriceID implements Serializable {
 
   protected IexPriceID(){};
 
-  public IexPriceID(String date, String symbol) {
+  public IexPriceID(String symbol, String date) {
     this.date = date;
     this.symbol = symbol;
   }
