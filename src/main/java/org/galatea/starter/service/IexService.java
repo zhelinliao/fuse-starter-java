@@ -6,8 +6,8 @@ import java.time.Period;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Locale;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.NonNull;
@@ -18,6 +18,7 @@ import org.galatea.starter.domain.IexPriceID;
 import org.galatea.starter.domain.IexSymbol;
 import org.galatea.starter.domain.IexHistoricalPrice;
 import org.galatea.starter.domain.rpsy.IHistoricalPriceRpsy;
+import org.galatea.starter.utils.helper.HolidayCalculator;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -35,6 +36,8 @@ public class IexService {
   private IexClientExtension iexClientExtension;
   @NonNull
   private IHistoricalPriceRpsy historicalPriceRpsy;
+  @NonNull
+  private HolidayCalculator holidays;
 
   private static final String RANGE_YEAR_TO_DATE = "ytd";
   private static final String RANGE_MAX = "max";
@@ -80,17 +83,19 @@ public class IexService {
   private List<IexHistoricalPrice> getHistoricalPricesForSymbolByDate(final String symbol, final String range, final String date, final String token){
     if (date == null || date.equals(""))
       return Collections.emptyList();
+
+    if (date.length() != 8) throw new IllegalArgumentException("Invalid date format.");
     else {
       List<IexHistoricalPrice> prices = null;
       try {
         LocalDate localDate = LocalDate.of(Integer.parseInt(date.substring(0, 4)),
             Integer.parseInt(date.substring(4, 6)), Integer.parseInt(date.substring(6, 8)));
-        log.info("Logging: Query by date, parse date: " + localDate);
         prices = getHistoricalPricesForSymbolCache(symbol, new ArrayList<>(Arrays.asList(localDate)));
       }
       catch (Exception e) {
         log.info(e.toString());
       }
+
       if (prices != null && !prices.isEmpty())
         return prices;
       else {
@@ -119,7 +124,6 @@ public class IexService {
     log.info("Logging: Today = " + currentDate.toString() + " startingDate = " + startingDate.toString());
     dates = startingDate.datesUntil(currentDate, Period.ofDays(1)).collect(Collectors.toList());
     prices = getHistoricalPricesForSymbolCache(symbol, dates);
-    log.info("Logging: Size of the list retrieve from cache is " + prices.size());
     if (!prices.isEmpty())
       return prices;
     else
@@ -165,15 +169,13 @@ public class IexService {
     List<IexHistoricalPrice> historicalPrice = new ArrayList<>();
     log.info("Logging: All data from cache "+ historicalPriceRpsy.findAll().toString());
     for (LocalDate date:dates) {
-      if (date.getDayOfWeek() == DayOfWeek.SATURDAY || date.getDayOfWeek() == DayOfWeek.SUNDAY)
+      if (date.getDayOfWeek() == DayOfWeek.SATURDAY || date.getDayOfWeek() == DayOfWeek.SUNDAY || holidays.getHolidays().contains(date))
         continue;
       IexPriceID iexPriceID = new IexPriceID(symbol.toUpperCase(), date.toString());
 
       Optional<IexHistoricalPrice> price = historicalPriceRpsy.findById(iexPriceID);
-      log.info("Logging: Search " + symbol + " " + date + " === Result: " + price);
       if (price.isPresent()) {
         historicalPrice.add(price.get());
-        log.info("Logging: add to cache " + symbol + " " + date);
       }
       else {
         log.info("Logging: can't find data for date " + date);
@@ -197,5 +199,4 @@ public class IexService {
       historicalPriceRpsy.save(iexPrice);
     return historicalPrice;
   }
-
 }
