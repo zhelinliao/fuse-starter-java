@@ -32,7 +32,7 @@ public interface IexClientExtension {
       @PathVariable(value = "symbol") String symbol,
       @RequestParam(value = "token") String token);
 
-  @GetMapping("/stock/{symbol}/chart/{range}/{date}")
+  @GetMapping("/stock/{symbol}/chart/{range}/{date}?chartByDay=true")
   List<IexHistoricalPrice> getHistoricalPricesForSymbolByDate(
       @PathVariable(value = "symbol") String symbol,
       @PathVariable(value = "range", required = false) String range,
